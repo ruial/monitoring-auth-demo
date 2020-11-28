@@ -1,0 +1,47 @@
+# https://www.pomerium.io/docs/reference/reference/
+
+pomerium_debug: true
+address: :443
+metrics_address: :9191
+
+# callback url is https://auth.localhost.pomerium.io:8080/oauth2/callback
+authenticate_service_url: https://auth.localhost.pomerium.io:8080
+certificate_file: _wildcard.localhost.pomerium.io.pem
+certificate_key_file: _wildcard.localhost.pomerium.io-key.pem
+
+# idp_provider: 'oidc'
+# idp_provider_url: 'https://openid.example'
+# idp_client_id: ''
+# idp_client_secret: ''
+# idp_scopes:
+#   - 'openid'
+#   - 'profile'
+#   - 'email'
+jwt_claims_headers: 'email'
+
+# HTTP only does not work very well because pomerium currently has hardcoded https redirects
+# insecure_server: true
+# cookie_secure: false
+
+# http://www.pomerium.io/configuration/#policy
+policy:
+  - from: https://prom.localhost.pomerium.io:8080
+    to: http://haproxy:8081
+    prefix: /admin # no allowed_ so everyone disallowed
+  - from: https://prom.localhost.pomerium.io:8080
+    to: http://haproxy:8081 # prometheus haproxy
+    pass_identity_headers: true
+    preserve_host_header: true
+    allowed_users:
+      - email@example.com
+    set_request_headers:
+      Authorization: Basic example
+  - from: https://grafana.localhost.pomerium.io:8080
+    to: http://grafana:3000
+    allow_public_unauthenticated_access: true
+  - from: https://httpbin.localhost.pomerium.io:8080
+    to: http://haproxy:8082 # httpbin haproxy
+    pass_identity_headers: true
+    preserve_host_header: true
+    allowed_domains:
+      - outlook.com # checks the user email domain

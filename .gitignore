@@ -1,0 +1,5 @@
+*.pem
+*.txt
+pomerium/.env
+.DS_Store
+db.sqlite3

@@ -1,0 +1,80 @@
+version: '3.4'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.22.2
+    container_name: prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - 9090:9090
+  grafana:
+    image: grafana/grafana:7.3.3
+    container_name: grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/provisioning/:/etc/grafana/provisioning
+      - grafana-data:/var/lib/grafana
+    env_file:
+      - ./grafana/.env
+  httpbin:
+      image: kennethreitz/httpbin:latest
+      container_name: httpbin
+      ports:
+      - 8083:80
+  haproxy:
+    image: haproxy:2.3.1
+    container_name: haproxy
+    ports:
+      - 8404:8404 # stats/exporter
+      - 8081:8081 # prometheus
+      - 8082:8082 # httpbin
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - ./haproxy/users.map:/usr/local/etc/haproxy/users.map
+    depends_on:
+      - prometheus
+      - grafana
+      - httpbin
+  # https://httpbin.localhost.pomerium.io:8080
+  # https://prom.localhost.pomerium.io:8080
+  # https://grafana.localhost.pomerium.io:8080
+  pomerium:
+    image: pomerium/pomerium:v0.10.6
+    container_name: pomerium
+    volumes:
+      - ./pomerium/:/pomerium
+    env_file:
+      - ./pomerium/.env
+    ports:
+      - 8080:443
+      - 9191:9191
+  # https://httpbin2.localhost.pomerium.io:444
+  nginx:
+    image: nginx:1.19.5
+    container_name: nginx
+    volumes:
+      - ./nginx/server/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/server/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/config:/config/nginx
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+      - 444:444
+  authelia:
+    image: authelia/authelia:4.23.3
+    container_name: authelia
+    volumes:
+      - ./authelia:/config
+    ports:
+      - 8085:80
+
+
+volumes:
+  prometheus-data:
+    name: prometheus-data
+  grafana-data:
+    name: grafana-data

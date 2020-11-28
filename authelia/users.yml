@@ -1,0 +1,27 @@
+# docker run authelia/authelia:4.23.3 authelia hash-password password --sha512
+users:
+  john:
+    displayname: "John Doe"
+    password: "$6$rounds=50000$QStISVlFQTZCVlZn$CT8xFSYDf58am0d1oRfleHdDfuuFS9d9tBHVrNHGdxaTCRSHPl1if64KiNuYNT4EHSZT4B33VF0qefvEuFTC91"
+    email: john.doe@authelia.com
+    groups:
+      - admins
+      - dev
+  jane:
+    displayname: "Jane Doe"
+    password: "$6$rounds=50000$QStISVlFQTZCVlZn$CT8xFSYDf58am0d1oRfleHdDfuuFS9d9tBHVrNHGdxaTCRSHPl1if64KiNuYNT4EHSZT4B33VF0qefvEuFTC91"
+    email: jane.doe@authelia.com
+    groups:
+      - admins
+      - dev
+  harry:
+    displayname: "Harry Potter"
+    password: "$6$rounds=50000$QStISVlFQTZCVlZn$CT8xFSYDf58am0d1oRfleHdDfuuFS9d9tBHVrNHGdxaTCRSHPl1if64KiNuYNT4EHSZT4B33VF0qefvEuFTC91"
+    email: harry.potter@authelia.com
+    groups: []
+  bob:
+    displayname: "Bob Dylan"
+    password: "$6$rounds=50000$QStISVlFQTZCVlZn$CT8xFSYDf58am0d1oRfleHdDfuuFS9d9tBHVrNHGdxaTCRSHPl1if64KiNuYNT4EHSZT4B33VF0qefvEuFTC91"
+    email: bob.dylan@authelia.com
+    groups:
+      - admins

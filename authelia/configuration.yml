@@ -1,0 +1,48 @@
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+host: 0.0.0.0
+port: 80
+log_level: debug
+jwt_secret: a_very_important_secret
+default_redirection_url: https://auth2.localhost.pomerium.io
+totp:
+  issuer: auth2.localhost.pomerium.io
+
+authentication_backend:
+  # Disable both the HTML element and the API for reset password functionality
+  disable_reset_password: false
+
+  file:
+    path: /config/users.yml
+    password:
+      algorithm: sha512
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: httpbin2.localhost.pomerium.io
+      policy: one_factor
+      subject:
+        - "group:admins"
+
+session:
+  name: authelia_session
+  secret: unsecure_session_secret
+  expiration: 3600 # 1 hour
+  inactivity: 300 # 5 minutes
+  domain: pomerium.io # Should match whatever your root protected domain is
+
+regulation:
+  max_retries: 3
+  find_time: 120
+  ban_time: 300
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt
