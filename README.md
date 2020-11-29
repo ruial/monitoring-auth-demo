@@ -33,4 +33,4 @@ openssl req \
 docker-compose up
 ```
 
-Check the *docker-compose.yml* file for the URLs used. Any subdomain from *localhost.pomerium.io* points to localhost.
+Most of the configurations are based on the official documentation for each project. Always use HTTPS on the public endpoints for security reasons and to avoid issues with redirects and cookies. Check the *docker-compose.yml* file for the URLs used. Any subdomain from *localhost.pomerium.io* points to localhost.
